@@ -1,0 +1,4 @@
+GET /get HTTP/1.1
+User-Agent: Telnet [ja] (Linux)
+Host: httpbin
+Connection: close

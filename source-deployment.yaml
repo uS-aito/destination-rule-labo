@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: source
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: source
+  template:
+    metadata:
+      labels:
+        app: source
+    spec:
+      containers:
+        - name: source
+          image: debian:bullseye-slim
+          command:
+            - tail
+          args:
+            - -f
+            - /dev/null

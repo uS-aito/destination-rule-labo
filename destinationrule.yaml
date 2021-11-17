@@ -1,0 +1,11 @@
+apiVersion: networking.Istio.io/v1beta3
+kind: DestinationRule
+metadata:
+  name: ilb-fail-circuitbreaker
+spec:
+  host: ilb-fail.default.svc.cluster.local
+  trafficPolicy:
+    outlierDetection:
+      consecutive5xxErrors: 2
+      interval: 10s
+      baseEjectionTime: 1m

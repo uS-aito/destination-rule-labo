@@ -1,0 +1,41 @@
+# 公式ドキュメントに載ってて動作検証用に適用したやつ
+# https://istio.io/latest/docs/tasks/traffic-management/circuit-breaking/
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: target-500
+spec:
+  host: target-500
+  trafficPolicy:
+    # connectionPool: # 検証
+    #   tcp:
+    #     maxConnections: 1
+    #   http:
+    #     http1MaxPendingRequests: 1
+    #     maxRequestsPerConnection: 1
+    outlierDetection:
+      consecutiveGatewayErrors: 1
+      consecutive5xxErrors: 0
+      interval: 10s
+      baseEjectionTime: 3m
+      maxEjectionPercent: 100
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: target-502
+spec:
+  host: target-502
+  trafficPolicy:
+    # connectionPool: # 検証
+    #   tcp:
+    #     maxConnections: 1
+    #   http:
+    #     http1MaxPendingRequests: 1
+    #     maxRequestsPerConnection: 1
+    outlierDetection:
+      consecutiveGatewayErrors: 1
+      consecutive5xxErrors: 0
+      interval: 10s
+      baseEjectionTime: 3m
+      maxEjectionPercent: 100

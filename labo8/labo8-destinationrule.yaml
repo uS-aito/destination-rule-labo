@@ -10,11 +10,6 @@ spec:
     connectionPool: # 検証
       tcp:
         maxConnections: 1
-      http:
-        http1MaxPendingRequests: 1
-        maxRequestsPerConnection: 1
-    outlierDetection:
-      consecutive5xxErrors: 1
-      interval: 10s
-      baseEjectionTime: 3m
-      maxEjectionPercent: 100 # 割合変化による挙動 minhealthpercentも合わせて検証
+      # http:
+      #   http1MaxPendingRequests: 1
+      #   maxRequestsPerConnection: 1

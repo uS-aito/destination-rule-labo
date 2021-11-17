@@ -3,16 +3,16 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: httpbin
+  name: target
 spec:
-  host: httpbin
+  host: target
   trafficPolicy:
-    connectionPool: # 検証
-      tcp:
-        maxConnections: 1
-      http:
-        http1MaxPendingRequests: 1
-        maxRequestsPerConnection: 1
+    # connectionPool: # 検証
+    #   tcp:
+    #     maxConnections: 1
+    #   http:
+    #     http1MaxPendingRequests: 1
+    #     maxRequestsPerConnection: 1
     outlierDetection:
       consecutive5xxErrors: 1
       interval: 10s
