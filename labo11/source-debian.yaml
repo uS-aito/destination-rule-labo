@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: source
+  name: source
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: source
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: source
+    spec:
+      containers:
+      - image: debian
+        name: debian
+        command:
+          - tail
+        args:
+          - -f 
+          - /dev/null

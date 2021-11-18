@@ -989,3 +989,13 @@ https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/connect
 → 通った。`-p h2c -c 10 -m 10 -n 100`を試す(一リクエストないでのストリーム数を増やす)
 → 通った。
 tcp.maxConnectionsと組み合わせていないため、逐次新しいTCPセッションが開かれている？しかしfortioで投げた時、sockets usedは常に1だったし、telnetで投げた時も何回投げても切断されなかった。本格的にパケットキャプチャが必要かもしれない。
+
+# 検証11. h2UpgradePolicyの検証
+DestinationRuleの有無を変更してリクエストを送信し、istio-proxyの動作を確認した。
+```
+[2021-11-18T09:24:17.367Z] "GET /get HTTP/2" 200 - via_upstream - "-" 0 603 28 24 "-" "curl/7.74.0" "a60e926c-0a8f-96c8-99b3-d24a6ce42dd0" "httpbin:8000" "10.72.0.14:80" inbound|80|| 127.0.0.6:43121 10.72.0.14:80 10.72.0.21:42870 outbound_.8000_._.httpbin.default.svc.cluster.local default
+[2021-11-18T09:24:46.655Z] "GET /get HTTP/1.1" 200 - via_upstream - "-" 0 603 2 2 "-" "curl/7.74.0" "76c189de-f910-907d-adc1-b521002713f8" "httpbin:8000" "10.72.0.14:80" inbound|80|| 127.0.0.6:53279 10.72.0.14:80 10.72.0.21:43102 outbound_.8000_._.httpbin.default.svc.cluster.local default
+```
+上がDestinationRuleあり、下がなし。サーバにリクエストが到達した時点でhttp/2になっているので、クライアント側のEnvoryが変換していると思われる。
+Envoryのページを参照すると、websocketを利用した場合の例でclient側のenvoyがhttp/2に変換しているらしい絵が確認できる。下記のような記述があり、WebsocketやConnect(おそらくConnect Method)以外については断言しきれないこと、http_chainなどIstio側からは見えないリソースがあることから検証したが、望み通りの結果になった。
+> Envoy Upgrade support is intended mainly for WebSocket and CONNECT support, but may be used for arbitrary upgrades as well.
